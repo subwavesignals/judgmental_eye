@@ -26,9 +26,30 @@ class User(db.Model):
 
 # Put your Movie and Rating model classes here.
 
+class Movie(db.Model):
+    """Movie listings."""
+
+    __tablename__ = "movies"
+
+    movie_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    title = db.Column(db.String(64), nullable=False)
+    released_at = db.Column(db.DateTime, nullable=False)
+    imbd_url = db.Column(db.String(128), nullable=False)
+
+
+class Rating(db.Model):
+    """Movie ratings by user"""
+
+    __tablename__ = "ratings"
+
+    rating_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    movie_id = db.Column(db.Integer, db.ForeignKey("movies.movie_id"), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"), nullable=False)
+    score = db.Column(db.Integer, nullable=False)
 
 ##############################################################################
 # Helper functions
+
 
 def connect_to_db(app):
     """Connect the database to our Flask app."""
