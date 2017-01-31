@@ -24,8 +24,7 @@ def load_users():
         row = row.rstrip()
         user_id, age, gender, occupation, zipcode = row.split("|")
 
-        user = User(user_id=user_id,
-                    age=age,
+        user = User(age=age,
                     zipcode=zipcode)
 
         # We need to add to the session or it won't ever be stored
@@ -47,7 +46,6 @@ def load_movies():
         row = row.rstrip()
         movie_data = row.split("|")
 
-        movie_id = int(movie_data[0])
         title = movie_data[1][:-7]
         released_str = movie_data[2]
         imbd_url = movie_data[4]
@@ -57,8 +55,7 @@ def load_movies():
         else:
             released_at = None
 
-        movie = Movie(movie_id=movie_id,
-                      title=title,
+        movie = Movie(title=title,
                       released_at=released_at,
                       imbd_url=imbd_url)
 
