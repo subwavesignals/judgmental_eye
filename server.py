@@ -6,12 +6,13 @@ from flask import (Flask, render_template, redirect, request, flash, session)
 from flask_debugtoolbar import DebugToolbarExtension
 
 from model import (User, Rating, Movie, connect_to_db, db)
+from flask_sqlalchemy import sqlalchemy
 
 
 app = Flask(__name__)
 
 # Required to use Flask sessions and the debug toolbar
-app.secret_key = "ABC"
+app.secret_key = "jhdwfjdsufdsjkfdhugsnotdrugsdsubyegd"
 
 # Normally, if you use an undefined variable in Jinja2, it fails
 # silently. This is horrible. Fix this so that, instead, it raises an
@@ -58,6 +59,45 @@ def register_form():
             flash("User already exists in database.")
             return redirect("/register")
 
+
+@app.route("/login", methods=['GET', 'POST'])
+def login_form():
+    """Display login form as GET and handles input as POST"""
+
+    if request.method == "GET":
+
+        if session.get('username') is not None:
+            flash("You're already logged in as {}.".format(session.get('username')))
+            return redirect("/")
+        else:
+            return render_template("login_form.html")
+
+    else:
+        email = request.form.get("email")
+        password = request.form.get("password")
+
+        try:
+            user = User.query.filter_by(email=email).one()
+        except sqlalchemy.orm.exc.NoResultFound:   # specify exception type
+            flash("Username not in database.")
+            return redirect("/login")
+
+        if user.password == password:
+            session['username'] = user.email
+            flash("Login successful.")
+            return redirect("/")
+        else:
+            flash("Incorrect password.")
+            return redirect("/login")
+
+
+@app.route("/logout")
+def logout():
+    """Clear Flask session and log out."""
+
+    session.clear()
+    flash("Logged out.")
+    return redirect("/")
 
 
 if __name__ == "__main__":
