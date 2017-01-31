@@ -51,7 +51,7 @@ def register_form():
         password = request.form.get("password")
 
         # Check if username already in database
-        users = User.query.filter_by(email=email).all()
+        users = User.query.filter_by(email=email).first()
 
         # If not, add username and redirect to homepage
         if not users:
@@ -77,7 +77,7 @@ def login_form():
     if request.method == "GET":
 
         # If user is already logged in, inform and redirect to homepage
-        if session.get('username') is not None:
+        if session.get('username'):
             flash("You're already logged in as {}.".format(session.get('username')))
             return redirect("/")
 
@@ -116,7 +116,7 @@ def logout():
     """Clear Flask session and log out."""
 
     # If no user logged in, don't log out; otherwise clear session
-    if session.get('username') is not None:
+    if session.get('username'):
         session.clear()
         flash("Logged out.")
     else:
