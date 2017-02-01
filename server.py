@@ -51,12 +51,43 @@ def movie_list():
     return render_template("movie_list.html", movies=movies)
 
 
-@app.route('/movies/<movie_id>')
+@app.route('/movies/<movie_id>', methods=['GET', 'POST'])
 def display_movie(movie_id):
-    """Displays details for specified movie."""
+    """Displays details for specified movie and allow user to add rating."""
 
-    movie = Movie.query.filter_by(movie_id=movie_id).one()
-    return render_template("movie_details.html", movie=movie)
+    # Prevents unlogged in users from adding ratings
+    user_has_rated = True
+
+    # Find current user if logged in
+    if session.get('username'):
+        user_email = session.get('username')
+        user = User.query.filter_by(email=user_email).first()
+        user_id = user.user_id
+
+        # Determine if user has previously rated this movie
+        user_has_rated = Rating.query.filter_by(user_id=user_id, movie_id=movie_id).first()
+
+    # Return movie ratings on GET request
+    if request.method == 'GET':
+        movie = Movie.query.filter_by(movie_id=movie_id).first()
+        return render_template("movie_details.html",
+                               movie=movie,
+                               user_has_rated=user_has_rated)
+
+    # Handle new movie rating on POST request
+    else:
+        # Get form input
+        score = request.form.get("score")
+
+        # Create rating
+        rating = Rating(movie_id=movie_id, user_id=user_id, score=score)
+
+        # Add and commit rating to database
+        db.session.add(rating)
+        db.session.commit()
+
+        flash("Your rating of {} has been added.".format(score))
+        return redirect("/movies/" + movie_id)
 
 
 @app.route('/register', methods=['GET', 'POST'])
