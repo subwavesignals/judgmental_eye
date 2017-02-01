@@ -43,6 +43,22 @@ def display_user(user_id):
     return render_template("user_details.html", user=user)
 
 
+@app.route("/movies")
+def movie_list():
+    """Show list of movies ordered by title"""
+
+    movies = Movie.query.order_by('title').all()
+    return render_template("movie_list.html", movies=movies)
+
+
+@app.route('/movies/<movie_id>')
+def display_movie(movie_id):
+    """Displays details for specified movie."""
+
+    movie = Movie.query.filter_by(movie_id=movie_id).one()
+    return render_template("movie_details.html", movie=movie)
+
+
 @app.route('/register', methods=['GET', 'POST'])
 def register_form():
     """Displays registration form as GET and handles input as POST"""
