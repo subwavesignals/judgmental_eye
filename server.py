@@ -56,13 +56,11 @@ def display_movie(movie_id):
     """Displays details for specified movie and allow user to add rating."""
 
     # Prevents unlogged in users from adding ratings
-    user_has_rated = True
+    user_has_rated = None
 
     # Find current user if logged in
     if session.get('username'):
-        user_email = session.get('username')
-        user = User.query.filter_by(email=user_email).first()
-        user_id = user.user_id
+        user_id = session.get('user_id')
 
         # Determine if user has previously rated this movie
         user_has_rated = Rating.query.filter_by(user_id=user_id, movie_id=movie_id).first()
@@ -162,6 +160,8 @@ def login_form():
         # Check for correct password, set session, and redirect to homepage
         if user.password == password:
             session['username'] = user.email
+            session['user_id'] = user.user_id
+            
             flash("Login successful.")
             return redirect("/users/" + str(user.user_id))
 
