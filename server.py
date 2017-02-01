@@ -35,6 +35,14 @@ def user_list():
     return render_template("user_list.html", users=users)
 
 
+@app.route('/users/<user_id>')
+def display_user(user_id):
+    """Displays details for specified user."""
+
+    user = User.query.filter_by(user_id=user_id).one()
+    return render_template("user_details.html", user=user)
+
+
 @app.route('/register', methods=['GET', 'POST'])
 def register_form():
     """Displays registration form as GET and handles input as POST"""
@@ -103,7 +111,7 @@ def login_form():
         if user.password == password:
             session['username'] = user.email
             flash("Login successful.")
-            return redirect("/")
+            return redirect("/users/" + str(user.user_id))
 
         # Inform user of incorrect password
         else:
