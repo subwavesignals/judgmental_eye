@@ -79,11 +79,16 @@ def display_movie(movie_id):
         # Get form input
         score = request.form.get("score")
 
-        # Create rating
-        rating = Rating(movie_id=movie_id, user_id=user_id, score=score)
+        # If user has already rated, update the score
+        if user_has_rated:
+            user_has_rated.score = score
 
-        # Add and commit rating to database
-        db.session.add(rating)
+        # Else add new rating to database
+        else:
+            rating = Rating(movie_id=movie_id, user_id=user_id, score=score)
+            db.session.add(rating)
+
+        # Commit changes to database
         db.session.commit()
 
         flash("Your rating of {} has been added.".format(score))
