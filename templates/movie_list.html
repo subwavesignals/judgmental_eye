@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Movie ID 267 is broken?????????? y -->
+
+<h2>Movies</h2>
+<ul>
+  {% for movie in movies %}
+    {% if movie.title %}
+      <li>
+        <a href="/movies/{{ movie.movie_id }}">
+          {{ movie.title }}
+        </a>
+      </li>
+    {% endif %}
+  {% endfor %}
+</ul>
+
+{% endblock %}

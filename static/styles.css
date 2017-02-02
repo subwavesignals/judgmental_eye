@@ -1,0 +1,43 @@
+body {
+    background-color: #223051;
+    color: #C8C6D7;
+    padding: 20px;
+}
+
+a {
+    color: #B591C6;
+}
+
+a:hover {
+    color: #561D4E;
+    text-decoration: none;
+}
+
+form input{
+    color: #223051;
+}
+
+.navbar {
+    background-color: #561D4E;
+    border-color: #000;
+}
+
+.navbar .navbar-nav>li>a {
+    color: #B591C6;
+}
+
+.navbar .navbar-nav>li>a:hover {
+    color: #fff;
+}
+
+.navbar .navbar-brand {
+    color: #bc3118;
+}
+
+.navbar .navbar-brand:hover {
+    color: #000;
+}
+
+.the-eye {
+    color: #bc3118;
+}

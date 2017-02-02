@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1><u>{{ movie.title }}</u></h1>
+
+{% if session.get('username') %}
+  {% if user_has_rated %}
+
+    <h3>Update your rating</h3>
+    <p>Your current rating: {{ user_has_rated.score }}</p>
+    <form action='/movies/{{ movie.movie_id }}' method='POST'>
+      <input type='number' name='score' min='1' max='5'>
+      <input type='submit' value='Update'>
+    </form>
+    
+  {% else %}
+
+    <h3>Rate this movie</h3>
+    <form action='/movies/{{ movie.movie_id }}' method='POST'>
+      <input type='number' name='score' min='1' max='5'>
+      <input type='submit' value='Rate'>
+    </form>
+
+  {% endif %}
+{% endif %}
+
+<p>Average rating: {{ average }}</p>
+{% if prediction %}
+    <p>We predict you will rate this movie {{ prediction }}.</p>
+    {% if beratement %}
+      <h2 class="the-eye">The Eye says: {{ beratement }}</h2>
+    {% endif %}
+{% endif %}
+
+
+<ul>
+  {% for rating in movie.ratings %}
+    <li><b>User {{ rating.user_id }}</b>: 
+        <ul><li>Score: {{ rating.score }}</li></ul>
+    </li>
+  {% endfor %}
+</ul>
+{% endblock %}
