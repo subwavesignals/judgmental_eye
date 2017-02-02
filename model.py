@@ -1,6 +1,7 @@
 """Models and database functions for Ratings project."""
 
 from flask_sqlalchemy import SQLAlchemy
+import correlation
 
 # This is the connection to the PostgreSQL database; we're getting this through
 # the Flask-SQLAlchemy helper library. On this, we can find the `session`
@@ -29,8 +30,58 @@ class User(db.Model):
         return "<User user_id=%s email=%s>" % (self.user_id,
                                                self.email)
 
+    def similarity(self, other):
+        """Return Pearson rating for user compared to other user."""
 
-# Put your Movie and Rating model classes here.
+        # Build empty objects to hold data
+        u_ratings = {}
+        paired_ratings = []
+
+        # Add movie_id & Rating object to dictionary
+        for r in self.ratings:
+            u_ratings[r.movie_id] = r
+
+        # If other user has rated the same movie as current user, add scores to list
+        for r in other.ratings:
+            u_r = u_ratings.get(r.movie_id)
+            if u_r:
+                paired_ratings.append((u_r.score, r.score))
+
+        # If crossover, return pearson correlation, else return 0.0
+        if paired_ratings:
+            return correlation.pearson(paired_ratings)
+        else:
+            return 0.0
+
+    def predict_rating(self, movie):
+        """Predict user's rating of a movie."""
+
+        # Get all other ratings for the movie
+        other_ratings = movie.ratings
+
+        # Calculate correlation between this user and all other reviewing users
+        similarities = [
+            (self.similarity(r.user), r)
+            for r in other_ratings
+        ]
+
+        # Sort by most to least similar
+        similarities.sort(reverse=True)
+
+        # Remove all anti-similarities
+        similarities = [(sim, r) for sim, r in similarities
+                        if sim > 0]
+
+        # If there are not positive similarities, return None
+        if not similarities:
+            return None
+
+        # Calculate predicted score using weighted mean
+        numerator = sum([r.score * sim for sim, r in similarities])
+        denominator = sum([sim for sim, r in similarities])
+
+        return numerator/denominator
+
 
 class Movie(db.Model):
     """Movie listings."""
