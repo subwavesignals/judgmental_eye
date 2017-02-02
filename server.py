@@ -68,9 +68,23 @@ def display_movie(movie_id):
     # Return movie ratings on GET request
     if request.method == 'GET':
         movie = Movie.query.filter_by(movie_id=movie_id).first()
+
+        rating_scores = [r.score for r in movie.ratings]
+        avg_rating = float(sum(rating_scores)) / len(rating_scores)
+
+        prediction = None
+
+        if (not user_has_rated) and user_id:
+            user = User.query.get(user_id)
+            if user:
+                prediction = user.predict_rating(movie)
+
+        print prediction
         return render_template("movie_details.html",
                                movie=movie,
-                               user_has_rated=user_has_rated)
+                               user_has_rated=user_has_rated,
+                               average=avg_rating,
+                               prediction=prediction)
 
     # Handle new movie rating on POST request
     else:
@@ -161,7 +175,7 @@ def login_form():
         if user.password == password:
             session['username'] = user.email
             session['user_id'] = user.user_id
-            
+
             flash("Login successful.")
             return redirect("/users/" + str(user.user_id))
 
