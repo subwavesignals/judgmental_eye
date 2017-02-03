@@ -1,12 +1,21 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div>
-    <h2>Movies</h2>
-    <p><a href="/movies">View all movies</a></p>
+<div class="container">
+  <div class="row">
+    <div class="col-xs-6">
+      <img class="img-responsive" src="https://4.bp.blogspot.com/-GSgkzE4N0w4/V8B61Fn_b_I/AAAAAAAAD6I/T2qL4fy4m_Q0tc2LEZzdQAA2i_Qa6fkTACLcB/s1600/1024-eyes.jpg">
+    </div>
 
-    <h2>Users</h2>
-    <p><a href="/users">View all users</a></p>
+
+    <div class="col-xs-6">
+        <h2>Movies</h2>
+        <p><a href="/movies">View all movies</a></p>
+
+        <h2>Users</h2>
+        <p><a href="/users">View all users</a></p>
+    </div>
+  </div>
 </div>
 
 {% endblock %}
