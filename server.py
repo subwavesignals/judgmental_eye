@@ -76,8 +76,8 @@ def display_movie(movie_id):
     # Return movie ratings on GET request
     if request.method == 'GET':
         movie = Movie.query.filter_by(movie_id=movie_id).first()
-
         rating_scores = [r.score for r in movie.ratings]
+
         avg_rating = float(sum(rating_scores)) / len(rating_scores)
 
         prediction = None

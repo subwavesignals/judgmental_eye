@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Bahiana|Cabin+Sketch:700');
+
 body {
     background-color: #223051;
     color: #C8C6D7;
@@ -11,6 +13,11 @@ a {
 a:hover {
     color: #561D4E;
     text-decoration: none;
+}
+
+h1 {
+    font-family: 'Bahiana';
+    font-size: 5em;
 }
 
 form input{
@@ -27,7 +34,7 @@ form input{
 }
 
 .navbar .navbar-nav>li>a:hover {
-    color: #fff;
+    color: #3E6680;
 }
 
 .navbar .navbar-brand {
@@ -40,4 +47,6 @@ form input{
 
 .the-eye {
     color: #bc3118;
+    font-family: 'Cabin Sketch', sans-serif;
+    text-shadow: 0 0 3px #FF0000, 0 0 5px #000000;
 }
